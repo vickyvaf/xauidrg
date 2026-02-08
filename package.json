@@ -1,0 +1,24 @@
+{
+  "name": "crawl-indogold-price",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "build": "mkdir -p dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@hono/node-server": "^1.19.9",
+    "axios": "^1.13.5",
+    "cheerio": "^1.2.0",
+    "hono": "^4.11.9"
+  },
+  "devDependencies": {
+    "netlify-cli": "^23.15.1"
+  }
+}
