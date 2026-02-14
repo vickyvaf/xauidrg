@@ -1,11 +1,12 @@
 {
   "name": "crawl-indogold-price",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "node --watch index.js",
+    "start": "bun index.ts",
+    "dev": "bun --watch index.ts",
     "build": "mkdir -p dist"
   },
   "keywords": [],
@@ -19,6 +20,9 @@
     "hono": "^4.11.9"
   },
   "devDependencies": {
-    "netlify-cli": "^23.15.1"
+    "@types/aws-lambda": "^8.10.160",
+    "@types/node": "^25.2.3",
+    "netlify-cli": "^23.15.1",
+    "typescript": "^5.9.3"
   }
 }

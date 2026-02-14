@@ -1,11 +1,11 @@
-const { serve } = require("@hono/node-server");
-const { Hono } = require("hono");
-const axios = require("axios");
-const cheerio = require("cheerio");
+import { serve } from "@hono/node-server";
+import { Hono } from "hono";
+import axios from "axios";
+import * as cheerio from "cheerio";
 
 const app = new Hono();
 
-async function getIndogoldPrice() {
+async function getIndogoldPrice(): Promise<number> {
   try {
     const response = await axios.get("https://www.indogold.id/", {
       headers: {
@@ -18,8 +18,8 @@ async function getIndogoldPrice() {
     let sellPriceText = "";
     $("font.text-left").each((i, el) => {
       if ($(el).text().includes("Harga Jual")) {
-        const priceContainer = $(el).parent().find("font.size-24.text-right");
-        sellPriceText = priceContainer.text();
+        const priceContainer = $(el).parent()?.find("font.size-24.text-right");
+        sellPriceText = priceContainer?.text() || "";
       }
     });
 
@@ -42,7 +42,7 @@ app.get("/price", async (c) => {
     // Try to get IP from headers or fallback
     const clientIp = c.req.header("x-forwarded-for") || "unknown";
     console.log(`[${timestamp}] Request from: ${clientIp} | Price: ${price}`);
-    return c.text(price);
+    return c.text(price.toString());
   } catch (error) {
     return c.json(
       {
@@ -54,14 +54,26 @@ app.get("/price", async (c) => {
   }
 });
 
-if (require.main === module) {
-  const port = 3000;
-  console.log(`Server is running on http://localhost:${port}`);
+const port = 3000;
 
+// simple check if this file is run directly
+import { fileURLToPath } from "node:url";
+import process from "node:process";
+
+const isMainModule = process.argv[1] === fileURLToPath(import.meta.url);
+
+// In Bun, if the file exports a default object with `fetch`,
+// it automatically starts a server (especially with --watch).
+// We should only manually start the server if NOT in Bun.
+// @ts-ignore - Bun global might not be typed
+const isBun = typeof globalThis.Bun !== "undefined";
+
+if (isMainModule && !isBun) {
+  console.log(`Server is running on http://localhost:${port}`);
   serve({
     fetch: app.fetch,
     port,
   });
 }
 
-module.exports = app;
+export default app;
